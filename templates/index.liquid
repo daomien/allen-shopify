@@ -1,0 +1,71 @@
+
+{% comment %}
+
+	-slider.
+	-banner-static.
+	-slidebar_left.
+	-slidebar_right.
+	-main_content
+
+{% endcomment %}
+
+{% assign sbld_width = 0 %}
+{% assign sbrd_width = 0 %}
+
+{% assign sblt_width = 0 %}
+{% assign sbrt_width = 0 %}
+{% if settings.mainc_d_width == 'auto' %}
+  {% if settings.use_slidebar_left %}
+    {% assign sbld_width = settings.slidebar_ld_width %}
+    {% assign sblt_width = settings.slidebar_ltb_width %}
+  {% endif %}
+
+  {% if settings.use_slidebar_right %}
+    {% assign sbrt_width = settings.slidebar_rtb_width %}
+    {% assign sbrd_width = settings.slidebar_rd_width %}
+  {% endif %}
+{% endif %}
+
+{% if settings.mainc_d_width == 'auto' %}
+  {% assign main_content_width_d = sbld_width | plus: sbrd_width %}
+  {% assign main_content_width_d = 12 | minus: main_content_width_d %}
+
+  {% assign main_content_width_t = sblt_width | plus: sbrt_width %}
+  {% assign main_content_width_t = 12 | minus: main_content_width_t %}
+{% else %}
+  {% assign main_content_width_d = settings.mainc_d_width %}
+  {% assign main_content_width_t = settings.mainc_tb_width %}
+{% endif %}
+
+<!-------------------- START CONTENT MAIN -->
+<div class="" id="slier-homepage">
+  {% include 'slider'%}
+</div>
+<!-------------------- END CONTENT MAIN -->
+<div class="clearfix"></div>
+<div class="">
+  <!-------------------- START SLIDEBAR LEFT -->
+  {% if settings.use_slidebar_left %}
+  <div class="col-lg-{{settings.slidebar_ld_width}} col-md-{{settings.slidebar_ltb_width}}" id="silderbar-home-left">
+    {% include 'render-layout' register_section: 'home_layout_sidebar_left'  %}
+  </div>
+  {% endif %}
+  <!-------------------- END SLIDEBAR LEFT -->
+  <div class="col-lg-{{main_content_width_d}} col-md-{{main_content_width_t}}" id="content-main">
+    {% include 'render-layout' register_section: 'home_layout_content'  %}
+  </div>
+  <!-------------------- START SLIDEBAR RIGHT -->
+  {% if settings.use_slidebar_right %}
+  <div class="col-lg-{{settings.slidebar_rd_width}} col-md-{{settings.slidebar_rtb_width}}" id="silderbar-home-right">
+    {% include 'render-layout' register_section: 'home_layout_sidebar_right'  %}
+  </div>
+  {% endif %}
+  <!-------------------- END SLIDEBAR RIGHT -->
+</div>
+<div class="clearfix"></div>
+<div class="" id="bottom">
+  {% include 'bottom'%}
+</div>
+  
+ 
+

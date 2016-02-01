@@ -1,0 +1,224 @@
+<!doctype html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+
+  <!-- Basic page needs ================================================== -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  {% if settings.favicon_enable %}
+  <link rel="shortcut icon" href="{{ 'favicon.png' | asset_url }}" type="image/png" />
+  {% endif %}
+
+  <!-- Title and description ================================================== -->
+  <title>
+    {{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+  </title>
+
+  {% if page_description %}
+  <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  <!-- Helpers ================================================== -->
+  {% include 'social-meta-tags' %}
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+
+  <!-- CSS ================================================== -->
+  {{ 'kiti_bt.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'bootstrap-theme.min.css' | asset_url | stylesheet_tag }}
+  {{ 'animate.css' | asset_url | stylesheet_tag }}
+{% comment %}  {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }} {% endcomment %}
+  {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'  | stylesheet_tag }}
+  <!-- Remove if not using Nivoslidedr -->
+  {{ 'nivo-slider.css' | asset_url | stylesheet_tag }} 
+  <!-- Latest compiled and minified CSS -->
+  <!--  FLex slider css-->
+  {{ "https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.2.2/flexslider.css" | stylesheet_tag  }}
+  <!-- end -->
+
+  <!-- Remove if not using Carousel slider-->
+  {{ 'owl.carousel.css' | asset_url | stylesheet_tag }}
+  {{ 'owl.transitions.css' | asset_url | stylesheet_tag }}
+  {{ 'owl.theme.css' | asset_url | stylesheet_tag }}
+
+  {{ 'jquery.bxslider.css'  | asset_url | stylesheet_tag }}
+  {{'magnifier.css' | asset_url | stylesheet_tag }}
+  {{ 'jquery-ui.min.css' | asset_url | stylesheet_tag }}
+  {{ 'sweetalert.css' | asset_url | stylesheet_tag }}
+ 
+  {{'icomoon.css' | asset_url | stylesheet_tag }}
+
+  <!-- Header hook for plugins ================================================== -->
+  {{ content_for_header }}
+  {% include 'oldIE-js' %}
+
+  {{ '//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js' | script_tag }}
+  {{ 'owl.carousel.min.js' | asset_url | script_tag }}
+  {% if  template contains "compare" %}
+     {{'jquery.storageapi.min.js' | asset_url | script_tag }}
+  {% endif %}
+  {{ 'owl.carousel.min.js' | asset_url | script_tag }}
+  {% include 'google-fonts' %}
+  {{ "//cdn.shopify.com/s/javascripts/currencies.js" | script_tag }}
+  {{ "jquery.currencies.min.js" | asset_url | script_tag }}
+  {% comment %}
+  If you store has customer accounts disabled, you can remove the following JS file
+  {% endcomment %}
+  {% if template contains 'customers' %}
+  {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+  {% endif %}
+  
+  <script type="text/javascript">
+    jQuery(document).ready(function($){
+  
+      $('.currency-select').click(function(e){
+
+        var name_currency = $(this).attr('name');
+        $('.currency-picker').val(name_currency);
+        $('#currency_display').text(name_currency);
+        $('.currency-picker').val(name_currency).change();
+		Currency.cookie.write(name_currency);
+        
+        //location.reload();
+      });
+
+      if (cookieCurrency != null) {
+        $("#currency_display").text(cookieCurrency);
+      }
+
+    });
+    
+  
+  </script>
+
+</head>
+
+{% comment %}
+Add the page template as a class for easy page or template specific styling.
+{% endcomment %}
+<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+
+  {% if settings.layout_width == 'container-fluid' %}
+ 	 {% assign layout_width = 'container-fluid' %}
+  {% else %}
+  	{% assign layout_widths = 'container-box' %}
+  	{% assign layout_width = 'container' %}
+  {% endif %}
+   
+  <div class="{{layout_widths}}">
+    <div class="{{layout_width}}">
+
+      {%comment%}
+        -top_link.
+        -site_nav.
+      {% endcomment %}
+      <!-- Header ================================================== -->
+      {% include 'header' %}
+
+      <main class="main-content" role="main">
+        {{ content_for_layout }}
+      </main>
+
+      <!-- Footer ================================================== -->
+      {% include 'footer' %}
+      {% include 'back-to-the-top' %}
+
+    </div>
+    <div id="loading">
+      <ul class="cssload-cssload-ballsncups">
+        <li>
+          <div class="cssload-circle"></div>
+          <div class="cssload-ball"></div>
+        </li>
+        <li>
+          <div class="cssload-circle"></div>
+          <div class="cssload-ball"></div>
+        </li>
+        <li>
+          <div class="cssload-circle"></div>
+          <div class="cssload-ball"></div>
+        </li>
+        <li>
+          <div class="cssload-circle"></div>
+          <div class="cssload-ball"></div>
+        </li>
+        <li>
+          <div class="cssload-circle"></div>
+          <div class="cssload-ball"></div>
+        </li>
+      </ul>
+    </div>
+  </div> 
+  
+  <!-- Latest compiled and minified JavaScript -->
+ 
+  <!-- Latest compiled and minified JavaScript -->
+
+  {% include 'modal-quickview' %}
+  {{ 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'  |  script_tag }}  
+  {{ 'modernizr.min.js' | asset_url | script_tag }}
+  <!-- Remove if not using Nivoslidedr -->
+  {{ 'jquery.nivo.slider.pack.js' | asset_url | script_tag }}
+  <!-- end -->
+    {{ 'jquery-ui.min.js' | asset_url | script_tag }}
+   {{"//cdnjs.cloudflare.com/ajax/libs/flexslider/2.2.2/jquery.flexslider.js"  |  script_tag }}
+  {% unless template contains 'compare' %}
+  {{'jquery.storageapi.min.js' | asset_url | script_tag }}
+  {% endunless %} 
+  {% if template contains "compare" %}
+  {{'compare.js' | asset_url | script_tag }}
+  {% endif %}
+  {{ 'jquery.bxslider.min.js' | asset_url | script_tag }}
+  {{ 'jquery.elevateZoom-3.0.8.min.js' | asset_url | script_tag }}
+  {{ 'jquery.countdown.min.js' | asset_url | script_tag }}
+  {{ 'fastclick.min.js' | asset_url | script_tag }}
+  {{ 'timber.js' | asset_url | script_tag }}
+  {{ 'script.js' | asset_url | script_tag }}
+  {{ 'sweetalert.min.js' | asset_url | script_tag  }}
+  {{ 'mobile_menu.js' | asset_url | script_tag  }}
+  {% comment %}
+  Template-specific js
+  {% endcomment %}
+  <script>
+    {% if resetPassword %}
+    $(function() {
+      timber.resetPasswordSuccess();
+    });
+    {% endif %}
+  </script>
+ 
+  {% comment %}
+  Ajaxify your cart with this plugin.
+  Documentation:
+  - http://shopify.com/timber#ajax-cart
+  {% endcomment %}
+  {% if settings.ajax_cart_method == "drawer" %}
+  {{ 'handlebars.min.js' | asset_url | script_tag }}
+  {% include 'ajax-cart-template' %}
+  {{ 'ajax-cart.js' | asset_url | script_tag }}
+  <script>
+    jQuery(function($) {
+      ajaxCart.init({
+        formSelector: '#AddToCartForm',
+        cartContainer: '#CartContainer',
+        addToCartSelector: '#AddToCart',
+        cartCountSelector: '#CartCount',
+        cartCostSelector: '#CartCost',
+        moneyFormat: {{ shop.money_format | json }}
+      });
+      });
+
+      jQuery('body').on('ajaxCart.afterCartLoad', function(evt, cart) {
+        // Bind to 'ajaxCart.afterCartLoad' to run any javascript after the cart has loaded in the DOM
+        timber.RightDrawer.open();
+      });
+  </script>
+  {% endif %}
+	{% include 'currencies' %}
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!-- /templates/page.contact.liquid -->
+{% comment %}
+
+This page template is a requirement if you are submitting your theme to the Shopify Theme Store.
+Be sure to select page.contact as the template from the admin page to have this template take effect.
+
+For information on adding more fields, visit:
+- http://docs.shopify.com/support/configuration/store-customization/adding-fields-to-the-liquid-contact-form
+
+{% endcomment %}
+
+
+{% include 'breadcrumb' %}
+<div id="page" class="container" style="padding: 0px 10px;">
+  <header class="header-pages">
+    <h1 class="title-pages">
+       {{ 'contact.form.title' | t }}
+    </h1>
+  </header>
+  <article class="infor-contact">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="contact-status">
+          <p>{{settings.infor-contact}}</p>
+        </div>
+      </div>
+    </div>
+    {% if settings.use_contact_map %}
+    <div class="container-fluid google-map">
+      {{ settings.map_iframe }}
+    </div>
+    {% endif %}
+
+    <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12 custom-contact">    
+      <fieldset>
+        {% comment %}
+        Regular page content goes here.
+        {% endcomment %}
+        <div class="rte">
+          {{ page.content }}
+        </div>
+
+        {% comment %}
+        Contact form starts here
+        {% endcomment %}
+        <div class="form-vertical">
+          {% form 'contact' %}
+
+          {% comment %}
+          Successful message
+          {% endcomment %}
+          {% if form.posted_successfully? %}
+          <p class="note form-success">
+            {{ 'contact.form.post_success' | t }}
+          </p>
+          {% endif %}
+
+          {{ form.errors | default_errors }}
+          <div class="contact-input">
+
+            <span class="first-name contact-infor">
+              {% assign name_attr = 'contact.form.fisrt_name' | t | handle %}
+              <input type="text" id="ContactFisrtName" class="input-full form-input"  placeholder="{{ 'contact.form.fisrt_name' | t }}*" name="contact[{{ name_attr }}]"  value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+            </span>
+
+            <span class="last-name contact-infor">
+              {% assign name_attr = 'contact.form.last_name' | t | handle %}
+              <input type="text" id="ContactLastName" class="input-full form-input" placeholder="{{ 'contact.form.last_name' | t }}*" name="contact[{{ name_attr }}]"  value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+            </span>
+
+          </div>
+          <div class="contact-input">
+
+            <span class="email contact-infor">
+              <input type="email" id="ContactFormEmail" pattern = "^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$" class="input-full form-input" placeholder="{{ 'contact.form.email' | t }}*" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required>
+            </span> 
+
+            <span class="website contact-infor">
+              {% assign name_attr = 'contact.form.website' | t | handle %}
+              <input type="text" id="ContactFormWebsite" class="input-full form-input" placeholder="{{ 'contact.form.website' | t }}*" name="contact[{{ name_attr }}]"  value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+            </span>
+          </div>
+
+          <div class=" contact-input">
+            <span class="subject contact-infor">
+              {% assign name_attr = 'contact.form.subject' | t | handle %}
+              <input type="text" id="ContactFormSubject" class="input-full form-input"  placeholder="{{ 'contact.form.subject' | t }}*" name="contact[{{ name_attr }}]"  value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+            </span>
+          </div>
+
+          <div class="form-message">
+            <span class="infor-message">
+              <textarea id="ContactFormMessage" class="input-full form-input" placeholder="{{ 'contact.form.message' | t }}*" name="contact[body]" required>{% if form.body %}{{ form.body }}{% endif %}</textarea>
+            </span>
+
+          </div>
+
+          <button class="button right" type="submit" value="{{ 'contact.form.send' | t }}">
+            <span><span>Send Email</span></span>
+          </button>
+
+          {% endform %}
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12">
+      <fieldset>
+        <div class="panel panel-default" style="box-shadow: none;">
+          <div class="panel-body">
+            <address class="address information-contact">
+              <h3>{{ 'contact.form.address' | t }}</h3>
+              <p>{{settings.footer_address}}</p>
+            </address>
+
+            <div class="phone-contact-us information-contact">
+              <h3>{{ 'contact.form.phone_number' | t }}</h3>
+              <p>{{ settings.header_contact_us_phone }}</p>
+              <p>{{settings.fax}}</p>
+            </div>
+
+            <div class="email-contact information-contact">
+              <h3>{{ 'contact.form.email' | t }}</h3>
+              <p>{{settings.header_contact_email}}</p>
+
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </article>
+</div>
+
+<div style="clear: both;">
+  {%include 'shortcode' load:'[brand id="brand-contact-us"]'%}
+</div>

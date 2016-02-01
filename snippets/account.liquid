@@ -1,0 +1,10 @@
+<div class="top-menu widget">
+  <div class="menu-top-menu-container animated ">
+    <ul id="menu-top-menu" class="nav_menu"> 
+    {% for link in linklists.account.links %}
+    {% assign linklistss = link.title | handleize %}
+      <li><a href="{{link.url}}">{{link.title}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>									
+</div>

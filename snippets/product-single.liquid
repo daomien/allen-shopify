@@ -1,0 +1,86 @@
+{% if product.compare_at_price > product.price %}
+	{% assign on_sale = true %}
+{% endif %}
+	<!-- single-product-item start -->
+	<div class="product-item">
+		<div class="product-image"> 
+		 		
+			<a href="{{ product.url | within: collection }}" title="{{ product.title | escape }}">
+              
+			<figure class="first-image">
+				<img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}">
+			</figure>
+              
+              {% if product.images.size > 1 %}
+				<figure class="second-image">
+					 {{product.images[1].src |img_url: 'large'| img_tag: product.title,'image-visible-hidden' }}
+					
+				</figure>
+			{% endif %}
+			</a>
+
+          <span class="shadow"></span>
+
+		</div>
+			<div class="product-overlay">
+              
+             {% if  enable_show_review %}
+
+					<span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+			{% endif %}
+              
+             {% if product.options.size > 1 %}
+			      <a href="#" onclick="location.href='{{ product.url | within: collection }}'">{{'products.product.product_option' | t }}</a>
+		     {% else %}
+				<div class="pro-add-to-cart">
+				 {% if product.variants.first.available %}
+					<p><a href="#" title="{{'products.product.add_to_cart' | t }}" data-pid="{{ product.variants.first.id }}" class="add-to-cart">{{'products.product.add_to_cart' | t }}</a></p>
+				{% endif %}
+				</div>
+			 {% endif %}
+			 
+				<div class="product-quick-view">
+					{% include 'wishlist-product'   %}	
+                  
+                  <a href="#" class="compare" data-pid="{{product.handle}}" title="{{ 'compare.general.compare_product' | t }}" data-toggle="tooltip" data-placement="top"><i class="fa fa-retweet"></i></a>
+                  <a href="{{ product.url | within: collection }}" data-pid="{{product.id}}" class="quick-view" title="Quick view" data-toggle="tooltip" data-placement="top"><i class="fa fa-eye"></i></a>
+					  
+				</div>
+				
+			</div>
+		<div class="product-text">
+			<h2><a class="product-title" href="{{ product.url | within: collection }}" title="">{{ product.title }} </a></h2>
+			<div class="product-price  ">
+				  {% comment %}
+				      You can show a leading 'from' or 'up to' by checking 'product.price_varies'
+				      if your variants have different prices.
+				    {% endcomment %}
+				    {% if on_sale %}
+				      {% if product.price_varies %}
+				        {% assign sale_price = product.price | money %}
+				        {{ 'products.product.on_sale_from_html' | t: price: sale_price }}
+				      {% else %}
+				        <strong>{{ 'products.product.on_sale' | t }}</strong>
+				        <span class="price-sale">{{ product.price | money }}</span>
+				      {% endif %}
+				    {% else %}
+				      {% if product.price_varies %}
+				        {% assign price = product.price | money %}
+				        {{ 'products.general.from_text_html' | t: price: price }}
+				      {% else %}
+				        {{ product.price | money }}
+				      {% endif %}
+				    {% endif %}
+				    {% if sold_out %}
+				      <br><strong>{{ 'products.product.sold_out' | t }}</strong>
+				    {% endif %}
+				    {% if on_sale %}
+				      <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+				     <s>{{ product.compare_at_price | money }}</s>
+				    {% endif %}
+			</div>
+
+		</div>
+	</div>
+	<!-- single-product-item end -->
+ 

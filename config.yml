@@ -1,0 +1,5 @@
+development:
+  access_token: "f51645bc6005e2e0dc0ef27b89896647"
+  store: "allen-19.myshopify.com"
+  bucket_size: 40
+  refill_rate: 2

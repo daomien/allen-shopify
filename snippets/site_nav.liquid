@@ -1,0 +1,142 @@
+<!--  Check and get menu -->
+  {% if  settings.menu_nav_choose   %}
+  	{% assign handle_parent_menu = settings.menu_nav_choose %}
+  {% else %}
+ 	 {%  assign handle_parent_menu = 'main-menu' %}
+  {% endif %}
+<!-- /End check and get menu -->
+
+<!--  Check and get number lever -->
+  {% if settings.menu_number_lever %}
+ 	 {% assign menu_number_lever = settings.menu_number_lever | plus: 0 %}
+  {% else %}
+  	{% assign menu_number_lever = 2 %}
+  {% endif %}
+<!--  /End check -->
+
+<!--  Check and get sticky menu-->
+  {% if settings.menu_sticky  %}
+  	{% assign  menu_sticky = true %}
+  {% else %}
+  	{% assign  menu_sticky = false %}
+  {% endif %}
+
+<!--/End check -->
+  {% if settings.menu_use_animation   %}
+    {% assign  menu_use_animation =true %}
+    {% assign menu_type_animation = settings.menu_type_animation %}
+    {% assign menu_animation= ' animated ' | append: settings.menu_type_animation  %}
+  {% else %}
+      {% assign menu_use_animation =false %}
+      {% assign menu_animation= ''  %}
+  {% endif %}
+
+<nav class="navbar navbar-kiti {% if menu_sticky %}enable-fixed {% endif %}"id="menu-navigation">
+  <div class=""> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span> 
+        <span class="icon-bar"></span> 
+        <span class="icon-bar"></span> 
+        <span class="icon-bar"></span> 
+      </button>
+        {% if settings.use_logo %}
+        <a class="navbar-brand" href="/">
+          {{ 'logo.png' | asset_url | img_tag: shop.name }}
+        </a>
+        {% else %}
+      <a class="navbar-brand text-uppercase" href="/"><strong>{{ shop.name }}</strong></a>
+        {% endif %}
+    </div>
+    
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <div class="nav navbar-nav">
+        <!--- get menu user choose in custom theme -->
+        {% for link in linklists[handle_parent_menu].links %}
+        {% assign child_list_handle = link.title | handleize %}
+        {% if linklists[child_list_handle].links != blank and  menu_number_lever >=2 %}
+
+        <div class="{% if link.active %}active {% endif %}{% cycle 'odd1','even1' %} {% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif%}Menu" aria-haspopup="true">
+          <a href="{{ link.url }}" class="MenuName level1">
+            <span>{{ link.title }}<i class="fa fa-caret-down"></i></span>
+          </a>
+          <div class="site-nav__dropdown {{menu_animation}}">
+            <div class="">
+              {% for childlink in linklists[child_list_handle].links %}
+              {% assign third_list_handle = childlink.title | handleize %}
+              {% if linklists[third_list_handle] and linklists[third_list_handle].links.size >0  and  menu_number_lever >=3 %}
+              <div class="itemMenu {% if childlink.active %}active {% endif %}{% cycle 'odd2','even2' %} {% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif%}has_child">
+                <a href="{{ childlink.url }}" class="MenuName level2">
+                  <span>{{ childlink.title | escape }}<i class="fa fa-caret-down"></i></span>
+                </a>
+                
+                <div class="itemChildMenu">
+                  {% for third_childlink  in linklists[third_list_handle].links %}
+                  {% assign fourth_link_handle = third_childlink.title | handleize  %}
+                    {% if linklists[fourth_link_handle]  and  linklists[fourth_link_handle].links.size > 0   and   menu_number_lever >=4 %}
+                      <div class="{% if third_childlink.active %}active {% endif %}{% cycle 'odd3','even3' %} {% if forloop.first %}first {% endif %} {% if forloop.last %}last {% endif%}has_third">
+                        <a href="{{ third_childlink.url }}" class="MenuName level3">
+                          <span>{{ third_childlink.title | escape }}<i class="fa fa-caret-down"></i></span>
+                        </a>
+                        
+                        <div class="itemGrandChildMenu">
+                          {% for fourth_childlink in linklists[fourth_link_handle].links %}
+                            <div class="{% if fourth_childlink.active %}active {% endif %}{% cycle 'odd4','even4' %} {% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif%}has_end">
+                              <a href="{{ fourth_childlink.url }}" class="MenuName level4">
+                                <span>{{ fourth_childlink.title | escape }}</span>
+                              </a>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% else %}
+                      <div class="{% if third_childlink.active %}active {% endif %}{% cycle 'odd3','even3' %}{% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif%}nochild">
+                        <a href="{{ third_childlink.url }}" class="MenuName level3">
+                          <span>{{ third_childlink.title | escape }}</span>
+                        </a>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              {% else %}
+                <div class="itemMenu {% if childlink.active %}active {% endif %}{%  cycle 'odd2','even2' %} {% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif%}nochild">
+                  <a href="{{ childlink.url }}" class="MenuName level2">
+                    <span>{{ childlink.title | escape }}</span>
+                  </a>
+                </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="{% if link.active %}active {% endif %}{%  cycle 'odd1','even1' %} {% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif%}Menu" aria-haspopup="true">
+          <a href="{{ link.url }}" class="MenuName level1">
+            <span>{{ link.title }}</span>
+          </a>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% include 'search-bar' %}
+      <div class="nav navbar-nav navbar-right">
+        <div><a href="#">Link</a></div>
+        <div class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <div class="dropdown-menu">
+            <div><a href="#">Action</a></div>
+            <div><a href="#">Another action</a></div>
+            <div><a href="#">Something else here</a></div>
+            <div role="separator" class="divider"></div>
+            <div><a href="#">Separated link</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.navbar-collapse --> 
+  </div>
+  <!-- /.container-fluid --> 
+</nav>

@@ -1,0 +1,88 @@
+{% if settings.home_use_slider %}
+        <div id="slides_timeline"></div>
+      <div id="{% include 'shortcode-render' render:'id' default:'slider' %}" class="nivoSlider">
+        {% assign num = 10 %}
+        {% for i in (1..num) %}
+            {% assign slide_handle = 'home_slide' | append  : i  | append : '.jpg'%}
+            {% assign slide_enable = 'home_slider_use_slide'  | append : i %}
+        	{% assign slide_caption  = 'slide' | append : i | append :'_title' %}
+            {%  if settings[slide_enable]  %}
+                <img src="{{  slide_handle  | asset_url }}" alt=""  title="{% if settings[slide_caption] !=""  %}#{{slide_caption}}{% endif %}"  {% if settings.home_use_controlNavThumbs %}  data-thumb="{{  slide_handle  | asset_url  }}"  {% endif %}/>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% assign num = 10 %}
+    {% for l in (1..num) %}
+	{% assign slide_caption  = 'slide' | append : l | append :'_title' %}
+	{% assign slide_des_1  = 'slide' | append : l | append :'_desc_1' %}
+	{% assign slide_des_2  = 'slide' | append : l | append :'_desc_2' %}
+	{% assign slide_link    = 'slide' | append : l | append :'_btn' %}
+        {% if settings[slide_caption] !=""  %}
+            <div id="{{slide_caption}}" class="nivo-html-caption">
+              <p class="title-slider">{{settings[slide_caption]}}</p>
+                {%  if settings[slide_des_1] != "" %}
+              	  <p class="caption-s1">{{settings[slide_des_1]}}</p>
+                {% endif %}
+                {%  if settings[slide_des_2] != "" %}
+                  <p class="caption-s2">{{settings[slide_des_2]}}</p>
+                {% endif %}
+                {%  if settings[slide_link] != "" %}
+                  <a href="{{settings[slide_link]}}"  class="btn-slider">
+                    <span>{{'homepage.slider.btn' | t }}</span>
+                    <i class="fa fa-chevron-right"></i>
+                  </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}  
+   <script type="text/javascript">
+    (function($){
+        $(document).ready(function() {
+     
+        var timeline = $("#slides_timeline").animate();
+            $('#{% include 'shortcode-render' render:'id' default:'slider' %}').nivoSlider({ 
+                effect: '{{settings.home_slider_effect}}', // Specify sets like: 'fold,fade,sliceDown'
+                slices: 15, // For slice animations
+                boxCols: 8, // For box animations
+                boxRows: 4, // For box animations
+                animSpeed: {{settings.home_slider_animSpeed }},                 // Slide transition speed
+                pauseTime: {{settings.home_slider_timeslide}},  
+                startSlide: 0, // Set starting Slide (0 index)
+                directionNav: {{settings.home_use_directionNav}}, // Next & Prev navigation 
+                controlNav: {{settings.home_use_controlNav}}, // 1,2,3... navigation
+                controlNavThumbs: {{settings.home_use_controlNavThumbs}}, // Use thumbnails for Control Nav
+                pauseOnHover: {{settings.home_use_pauseOnHover }}, // Stop animation while hovering
+                autoStart: {{settings.home_slide_autoplay}},       
+                manualAdvance:{% if settings.home_use_autoplay_sld %} false {% else %} true {% endif %},
+                prevText: 'Prev', // Prev directionNav text
+                nextText: 'Next', // Next directionNav text
+                randomStart: false, // Start on a random slide
+                beforeChange: function() {resetTimeline();}, // Triggers before a slide transition
+                afterChange: function() {animateTimeline();}, // Triggers after a slide transition
+                slideshowEnd: function() {}, // Triggers after all slides have been shown
+                lastSlide: function() {}, // Triggers when last slide is shown
+                afterLoad: function() {  {% if settings.home_slide_autoplay %} animateTimeline(); {% endif %}} // Triggers when slider has loaded
+            });
+        function resetTimeline(){
+           timeline = $("#slides_timeline");
+            timeline.css({width:'0'},0);
+        }
+        ////animate timeline
+        function animateTimeline(){
+            timeline.stop().css({width:'0',opacity:1},0);
+            timeline.stop().animate({width:'100%'},{{settings.home_slider_timeslide}},'linear',function(){$(this).animate({opacity:0,width:0})});
+            
+        }
+        {% if settings.home_use_pauseOnHover %}
+                $(".nivoSlider").hover(function() {
+                    /* Stuff to do when the mouse enters the element */
+                    timeline.stop();
+                }, function() {
+                    /* Stuff to do when the mouse leaves the element */
+                   {% if settings.home_slide_autoplay %}  animateTimeline();  {% endif %}
+                });
+            {% endif %}
+    });
+    })(jQuery); 
+    </script>
+{% endif %}

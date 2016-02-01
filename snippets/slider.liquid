@@ -1,0 +1,47 @@
+
+{% assign sb_slider_ld_width = 0 %}
+{% assign sb_slider_rd_width = 0 %}
+
+{% assign sb_slider_lt_width = 0 %}
+{% assign sb_slider_rt_width = 0 %}
+
+{% if settings.content_slider_d_width == 'auto' and settings.content_slider_tb_width == 'auto' %}
+  {% if settings.use_sidebar_l_slider %}
+    {% assign sb_slider_ld_width = settings.sidebar_slider_l_d_width %}
+    {% assign sb_slider_lt_width = settings.sidebar_slider_l_tb_width %}
+  {% endif %}
+
+  {% if settings.use_sidebar_r_slider %}
+    {% assign sb_slider_rd_width = settings.sidebar_slider_r_d_width %}
+    {% assign sb_slider_rt_width = settings.sidebar_slider_r_tb_width %}
+  {% endif %}
+{% endif %}
+
+{% if settings.content_slider_d_width == 'auto' and settings.content_slider_tb_width == 'auto' %}
+  {% assign content_slider_d_width = sb_slider_ld_width | plus: sb_slider_rd_width %}
+  {% assign content_slider_d_width = 12 | minus: content_slider_d_width %}
+
+  {% assign content_slider_tb_width = sb_slider_lt_width | plus: sb_slider_rt_width %}
+  {% assign content_slider_tb_width = 12 | minus: content_slider_tb_width %}
+{% else %}
+  {% assign content_slider_d_width = settings.content_slider_d_width %}
+  {% assign content_slider_tb_width = settings.content_slider_tb_width %}
+{% endif %}
+
+<!-- ===================================== Slider ====================================== -->
+
+{% if settings.use_sidebar_l_slider %}
+  <div  class="col-lg-{{settings.sidebar_slider_l_d_width}} col-md-{{settings.sidebar_slider_l_tb_width}}"> 
+    {% include 'render-layout' register_section: 'layout_sidebar_slider_left'  %}
+  </div>
+{% endif %}
+
+<div  class="col-lg-{{content_slider_d_width}} col-md-{{content_slider_tb_width}}"> 
+  {% include 'render-layout' register_section: 'layout_content_slider'  %}
+</div>
+
+{% if settings.use_sidebar_r_slider %}
+<div  class="col-lg-{{settings.sidebar_slider_r_d_width}} col-md-{{settings.sidebar_slider_r_tb_width}}">
+    {% include 'render-layout' register_section: 'layout_sidebar_slider_right'  %}
+</div>
+{% endif %}

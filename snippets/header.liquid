@@ -1,0 +1,76 @@
+{% comment %}
+
+-[logo].
+-[search].
+-welcome-message.
+-contact.
+-language.
+-account.
+-currency
+...
+
+{% endcomment %}
+<header class="site-header">
+  <div class="top-bar">
+    <div class="container">
+      {% include 'top-bar' %}
+    </div>
+  </div>
+  <div class="header clearfix">
+    <div class="container">
+      <div class="header-inner">
+        <div class="row">
+          <div class="col-xs-12 col-md-4">
+            <div class="header-search">
+              <div class="nav-search">
+                {% include 'search-bar' %}
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-4">
+            <div class="logo">
+              {% comment %}
+              Use the uploaded logo from theme settings if enabled
+              {% endcomment %}
+              <h1 class="header-logo">
+                {% if settings.logo_use_image %}
+                <a href="/">
+                  {{ 'logo.png' | asset_url | img_tag: shop.name }}
+                </a>
+                {% else %}
+                <a href="/">{{ shop.name }}</a>
+                {% endif %}
+              </h1>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-4">                
+            <div id="mycart">
+              <div  id="cart">
+                <div class="cart-inner">
+                  <button id="cartToggle" type="button" onclick="location.href='/cart'" data-loading-text="Loading..." class="button-cart">
+                    <span id="cartCount">{{ cart.item_count }}</span>
+                  </button>
+                  <div class="small-cart animated small--hide">
+                    {% include 'small-cart' %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="myaccount">
+              {% include 'account' %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-container hidden-xs">
+      {% include 'menu' type:'horizontal' handle:'main-menu' %}
+    </div>
+    {% include 'menu-mobile'%}
+  </div>
+</header>
+
+{% comment %}  
+  {% include 'menu' type:'horizontal' handle:'main-menu' %}
+  {% include 'menu' type:'vertical' handle:'main-menu' %}
+{% endcomment %}

@@ -1,0 +1,8 @@
+{% assign word_homecontent = settings.home_content_order | split: '-' %}
+{% for word in word_homecontent %}
+
+{% if word == 'A' %}
+	{% include 'shortcode' load: ' [carousel_product_tab_row id="myid-custom" collection1="frontpage" collection2="nokia"  collection3="oppo" collection4="khicon" collection5="littlemonkey" title="SALE OFF" cols=”5” rows=”2”] ' %}
+{% endif %}
+
+{% endfor %}

@@ -1,0 +1,24 @@
+
+<!-- /templates/404.liquid -->
+{% include 'breadcrumb' %}
+<div id="page_error" class="container">
+  <div class="error_content">
+    <div class="container">
+      {% if settings.error_label != blank %}
+        <h1 class="error_label">
+          {{ settings.error_label }}
+        </h1>
+      {% endif %}
+      {% if settings.error_content != blank %}
+        <h2>
+          {{ settings.error_content }}
+        </h2>
+      {% endif %}
+    </div>
+  </div>
+  <p class="home-link">Please go to the 
+    <a href="/">  <button class="button">Back to Home    </button>  </a>
+  </p>
+  
+
+</div>

@@ -1,0 +1,81 @@
+<ul class="inline-list social-icons">
+{% if settings.social_facebook_link != blank %}
+    <li>
+      
+      <a class="icon-fallback-text" href="{{ settings.social_facebook_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Facebook' }}">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+  {% endif %}
+
+  {% if settings.social_twitter_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_twitter_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Twitter' }}">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+  {% endif %}
+  
+  {% if settings.social_pinterest_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_pinterest_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Pinterest' }}">
+        <i class="fa fa-pinterest"></i>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_google_plus_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_google_plus_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Google Plus' }}" rel="publisher">
+        <i class="fa fa-google-plus"></i>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_instagram_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_instagram_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Instagram' }}">
+        <i class="fa fa-instagram"></i>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_tumblr_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_tumblr_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Tumblr' }}">
+        <i class="fa fa-tumblr"></i>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_youtube_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_youtube_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'YouTube' }}">
+        <i class="fa fa-youtube-play"></i>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_vimeo_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_vimeo_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Vimeo' }}">
+        <i class="fa fa-vimeo"></i>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_fancy_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_fancy_link }}" data-toggle="tooltip" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Fancy' }}">
+        <span class="icon icon-fancy" aria-hidden="true"></span>
+        <span class="fallback-text">Fancy</span>
+      </a>
+    </li>
+  {% endif %}
+  {% if settings.social_rss_link != blank %}
+    <li>
+      <a class="icon-fallback-text" href="{{ settings.social_rss_link }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'RSS' }}">
+        <i class="fa fa-rss"></i>
+      </a>
+    </li>
+  {% endif %}
+</ul>
+<script>
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();   
+  });
+</script>

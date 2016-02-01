@@ -1,0 +1,67 @@
+{% if settings.carousel_product_single_tab_collection != "" %}
+	{% assign collection_handle = settings.carousel_product_single_tab_collection %}
+	{% assign total = settings.carousel_product_single_tab_total  %}
+	{% assign enable_show_review = settings.carousel_product_single_tab_review %}
+	<section class="product-single-tab">
+			<div class="section-heading">
+				<h2> {{  settings.carousel_product_single_tab_title | escape }}</h2>
+			</div>
+			 <div id="{% include 'shortcode-render' render:'id' default:'slider' %}" class="owl-carousel">
+				 {% for product in collections[collection_handle].products limit: total %}
+			       <div class="item {% if forloop.first %} item-first {% endif %} {% if forloop.last %} item-last {% endif %} {% cycle 'odd', 'even' %}">
+			       	 {% include 'product-single' %}
+			       </div>
+			     {% endfor %}
+			</div>
+		<script>
+		(function($) {
+			$("#{% include 'shortcode-render' render:'id' default:'slider' %}").owlCarousel({
+		 
+			    // Most important owl features
+			    items : {{settings.carousel_product_single_tab_items}},
+			    itemsCustom : false,
+			    itemsDesktop : [1199,{{settings.carousel_product_single_tab_itemsDesktop}}],
+			    itemsDesktopSmall : [980,3],
+			    itemsTablet: [768,{{settings.carousel_product_single_tab_itemsTablet}}],
+			    itemsTabletSmall: false,
+			    itemsMobile : [479,{{settings.carousel_product_single_tab_itemsMobile}}],
+			    singleItem : false,
+			    itemsScaleUp : false,
+			 
+			    //Basic Speeds
+			    slideSpeed : {{settings.carousel_product_single_tab_speed}},
+			    paginationSpeed : {{settings.carousel_product_single_tab_speed}},
+			    rewindSpeed : {{settings.carousel_product_single_tab_speed}},
+			 
+			    //Autoplay
+			    autoPlay : {{settings.carousel_product_single_tab_autoplay}},
+			    stopOnHover : false,
+			 
+			    // Navigation
+			    navigation : {{settings.carousel_product_single_tab_navigation}},
+			    navigationText : ["prev","next"],
+			    rewindNav : true,
+			    scrollPerPage : false,
+			 
+			    //Pagination
+			    pagination : {{settings.carousel_product_single_tab_pagination}},
+			    paginationNumbers: false,
+			 
+			    // Responsive 
+			    responsive: true,
+			    responsiveRefreshRate : 200,
+			    responsiveBaseWidth: window,
+			 
+			    // CSS Styles
+			    baseClass : "owl-carousel",
+			    theme : "owl-theme",
+
+			 
+			    //Auto height
+			    autoHeight : false,
+			})
+		})(jQuery);
+		</script>
+	</section>
+	
+{% endif %}

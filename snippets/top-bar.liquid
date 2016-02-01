@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-md-6 col-lg-6 ">
+    <div class="call-us">
+      {% if settings.header_contact_phone != blank %}
+      <a>Call us free 24/7:<p>{{ settings.header_contact_phone }}</p></a> 
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-6 top-link">
+    {% include 'currency-picker' %}
+    <div class="currency-picker__wrapper">
+        <form method="post" enctype="multipart/form-data" id="currency">
+          <ul class="select-menu">
+            <li class="select-menu-item">
+              <span id="currency_display">{{ shop.currency }}</span>             
+              <i class="fa fa-angle-down"></i>
+              <ul class="dropdown-select-menu">
+                {% assign codes = 'USD,EUR,GBP,CAD,ARS,AUD,BBD,BDT,BSD,BHD,BRL,BOB,BND,BGN,ILS,MMK,KYD,CLP,CNY,COP,CRC,HRK,CZK,DKK,DOP,XCD,EGP,XPF,FJD,GHS,GTQ,GYD,GEL,HKD,HUF,ISK,INR,IDR,NIS,JMD,JPY,JOD,KZT,KES,KWD,LVL,LTL,MXN,MYR,MUR,MDL,MAD,MNT,MZN,ANG,NZD,NGN,NOK,OMR,PKR,PYG,PEN,PHP,PLN,QAR,RON,RUB,SAR,RSD,SCR,SGD,SYP,ZAR,KRW,LKR,SEK,CHF,TWD,THB,TZS,TTD,TRY,UAH,AED,UYU,VEB,VND,ZMK' | split: ',' %}
+                {% assign supported_codes = settings.supported_currencies | split: ' ' %}                
+                {% for code in supported_codes %}
+                {% if codes contains code %} 
+                <li><a class="currency-select" name="{{ code }}">{{ code }}</a></li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
+          <input type="hidden" name="code" value="">
+          <input type="hidden" name="redirect" value="">
+        </form>
+      </div>
+  </div>
+</div>

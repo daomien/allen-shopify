@@ -1,0 +1,64 @@
+<section id="wishlist-page">
+  <div class="container">
+    <div class="row">
+      <div class="heading-wishlist">
+        <h2>Your wishlist</h2>
+      </div>
+      <div class="wishlist-content">
+        {% if customer %}
+        <table>
+          <caption>MY WISHLIST</caption>
+          <thead>
+            <tr>
+              <th>Product image</th>
+              <th>Product Info</th> 
+              <th>Action</th>
+            </tr> 
+          </thead>
+          <tbody>
+            {% paginate collection.products by collection.all_products_count %}
+            {% capture tags %}{% for tag in customer.tags %}{{ tag }} {% endfor %}{% endcapture %}
+            {% assign tags = tags | remove:'x' | split:' ' | uniq | join:' ' %}
+            {% for product in collection.products %}
+            {% if tags contains product.id %}
+            {% for tag in customer.tags %}{% if tag contains product.id %}{% assign t = tag %}{% endif %}{% endfor %}
+            {% assign check = t.size | minus:product.id.size | modulo:2 %}
+            {% assign  check_mod =  t.size | modulo :2   %}
+            {% if check == 0 or check_mod == 0  %}
+            <tr class="x{{ t }}">
+              <td> {{ product.featured_image | product_img_url:'large' | img_tag:product.title }}</td>
+              <td>
+                <h3>  <a href="{{ product.url }}"> {{ product.title }} </a> </h3>
+                <div class="price">
+                  {{ product.price | money }}
+                </div>
+                <p> {{product.description | truncatewords : 80 }} ...<a href="{{ product.url }}"> View more</a> </p>
+              </td>
+              <td>
+                <button type="button" class="btn btn-success wishlist-addtocart" data-wid="{{ product.variants[0].id }}"  ><i class="fa fa-opencart"></i> Add to cart</button>
+                <button type="button" class="btn btn-success wishlist-addedtocart" data-wid="{{ product.variants[0].id }}" onclick="window.location.href='/cart'" ><i class="fa fa-opencart"></i> View Cart</button>
+                <button type="button" class="btn btn-danger wishlist-remove"   data-wid="x{{ t }}"><i class="fa fa-trash-o"></i> Remove</button>
+              </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+            {% endpaginate %}
+          </tbody>
+        </table>
+        {% else %}
+        <h4>Please login to add product to wishlist </h4>
+        {% endif %}
+        {% form 'customer' %} 
+        <input type='hidden' name='contact[email]' value='{{ customer.email }}'/>
+        <input type='hidden' name='contact[tags]' class='remove-value' value='' />
+        {% endform %}
+        <form action='/cart/add' class='add-variant' method='post'>
+          <input type='hidden' name='id' class='product-select' value='' />
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+

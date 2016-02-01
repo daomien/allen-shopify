@@ -1,0 +1,52 @@
+(function($){
+	  	$(document).ready(function() {
+	  	  storage=$.localStorage;
+          var compare = {};
+          var total_compare = 3;
+          if(storage.isSet('compare')){
+             compare = storage.get('compare');
+          }else{
+            storage.set('compare',{});
+          }
+         
+          if( !$.isEmptyObject(compare)){
+          	$(".error-compare").hide(20);
+          		var list_id = '';
+           		$.each(compare,function(index, el) {
+           			var json_url = "/products/"+el+".js";
+           				if($.trim(el) !="") {
+           					jQuery.getJSON(json_url, function(product) {
+           						 var html ='';
+							  	 html = html + '<tr class="'+product.handle+'">';
+							  	 html = html + '<td> <img src="'+product.featured_image+'" class="compare-image"  width="150"/> </td>';
+							  	 html = html + '<td> <a href="/'+ product.url+'"><h3> '+product.title +' </h3></a>  <p> Price <strong>  '+product.price +' </strong> </p> </td>';
+							  	 html = html + '<td> '+ product.description +' </td>';
+							  	 html = html + '<td> <button type="button" class="btn btn-danger remove-compare" data-handle="'+product.handle+'" >Remove</button> </td>';
+							  	 html = html + '<tr>';
+							  	 $("#table-compare").append(html);
+							} );
+
+           				}
+           		});
+           		
+          }else{
+          	 console.log(compare);
+          	$(".error-compare").show();
+          }
+          $("#table-compare").on('click', '.remove-compare', function(event) {
+          	event.preventDefault();
+          	/* Act on the event */
+          	var id = $(this).data('handle');
+          	$("tr."+id).fadeOut(600);
+          	$.each(compare,function(index, el) {
+          		if(el== id){
+          			compare[index]="";
+                delete compare[index];
+          		}
+          	});
+          	 storage.set('compare',compare);
+             swal({   title: "Delete success",   text: "I will close in 2 seconds.",   timer: 2000,   showConfirmButton: false,type: "success"});
+          });
+           
+	  	});	
+})(jQuery);

@@ -1,0 +1,109 @@
+
+<header class="header-pages">
+  <h1 class="title-pages">
+    {{ 'wishlist.general.title' | t }}
+  </h1>
+</header>
+
+{% include 'breadcrumb' %}
+
+<section id="wishlist-page">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-md-3">
+        <aside id="search-3" class="asidebar-wishlist">
+          <h3 class="tittle-sidebar">{{ 'general.search.title' | t }}</h3>
+          <div class="search-wishlist">
+            <div class="nav-search-wishlist">
+              {% include 'search-bar' %}
+            </div>
+          </div>
+        </aside>
+
+        <aside id="blog-wishlist" class="asidebar-wishlist">
+          <h3 class="tittle-sidebar">{{ 'blogs.article.title_blog' | t }}</h3>
+          {% for article in blogs.news.articles %}
+          <div class="item-article row">
+            <div class="col-md-4"> 
+              {% if article.image %}<a href="{{article.url}}" class="image-post">{{ article | img_url: 'thumb' | img_tag }}</a>{% endif %}
+            </div>
+            <div class="col-md-8">  
+              <div class="blog-title">
+                <a href="{{article.url}}"> {{article.title}}</a>
+              </div>
+              <div class="public-at">
+                {{article.published_at |  date: "%B , %d , %Y"}}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </aside>
+
+        <aside class="tags">
+
+          <h3 class="tittle-sidebar">{{ 'collections.sidebar.title_tags' | t }}</h3>
+          {% for tag in collection.all_tags %}
+          {{tag  | link_to_remove_tag: tag }} 
+          {%endfor %}	
+        </aside>
+
+      </div>
+
+      <div class="col-xs-12 col-md-9">
+        <div class="wishlist-content">
+          {% if customer %}
+          <table>
+            <caption class="post-title"><h2>My wishlist on Heajy</h2></caption>
+            <thead>
+              <tr>
+                <th style="width: 14%;">Product Image</th>
+                <th>Product Information</th>
+                <th>Action</th>
+              </tr> 
+            </thead>
+            <tbody>
+              {% paginate collection.products by collection.all_products_count %}
+              {% capture tags %}{% for tag in customer.tags %}{{ tag }} {% endfor %}{% endcapture %}
+              {% assign tags = tags | remove:'x' | split:' ' | uniq | join:' ' %}
+              {% for product in collection.products %}
+              {% if tags contains product.id %}
+              {% for tag in customer.tags %}{% if tag contains product.id %}{% assign t = tag %}{% endif %}{% endfor %}
+              {% assign check = t.size | minus:product.id.size | modulo:2 %}
+              {% assign  check_mod =  t.size | modulo :2   %}
+              {% if check == 0 or check_mod == 0  %}
+              <tr class="x{{ t }}">
+                <td> {{ product.featured_image | product_img_url:'small' | img_tag:product.title }}</td>
+                <td>
+                  <h3>  <a href="{{ product.url }}"> {{ product.title }} </a> </h3>
+                  <div class="price">
+                    {{ product.price | money }}
+                  </div>
+                  <p> {{product.description | truncatewords : 80 }} ...<a href="{{ product.url }}"> View more</a> </p>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-success wishlist-addtocart" data-wid="{{ product.variants[0].id }}"  ><i class="fa fa-opencart"></i> Add to cart</button>
+                  <button type="button" class="btn btn-success wishlist-addedtocart" data-wid="{{ product.variants[0].id }}" onclick="window.location.href='/cart'" ><i class="fa fa-opencart"></i> View Cart</button>
+                  <button type="button" class="btn btn-danger wishlist-remove"   data-wid="x{{ t }}"><i class="fa fa-trash-o"></i> Remove</button>
+                </td>
+              </tr>
+              {% endif %}
+              {% endif %}
+              {% endfor %}
+              {% endpaginate %}
+            </tbody>
+          </table>
+          {% else %}
+          <h4>Please login to add product to wishlist </h4>
+          {% endif %}
+          {% form 'customer' %}	
+          <input type='hidden' name='contact[email]' value='{{ customer.email }}' id="contact-email"/>
+          <input type='hidden' name='contact[tags]' class='remove-value' value='' />
+          {% endform %}
+          <form action='/cart/add' class='add-variant' method='post'>
+            <input type='hidden' name='id' class='product-select' value='' />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

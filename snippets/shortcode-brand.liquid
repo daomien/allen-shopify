@@ -1,0 +1,62 @@
+{% assign brand_title = settings.brand_title %}
+{% assign total_brand =  10  %}
+{% assign handle_brand_use   = 'brand_use_' %}
+{% assign handle_brand_image ='brand_logo_'  %}
+{% assign handle_brand_link = 'brand_link_'  %}
+<div id="our-brand" class="brand-carousel">
+  <div class="container">
+    <div class="brand-heading">
+      <h2> {{ brand_title | strip_html }}</h2>
+    </div> 
+    <div id="{% include 'shortcode-render' render:'id' default:'brand-slider' %}">
+      {% for  i in (1..total_brand) %}
+
+      <div class="item-brand">
+        {% assign collection_handle   = handle_brand_use | append: i %}
+        {% assign collection_image  =  handle_brand_image | append: i | append: '.png'%}
+        {% assign collection_link = handle_brand_link | append: i  %}
+        {% assign brand_name  =  'brand_name_' | append: i %}
+
+        {% if settings[collection_handle]    %}
+
+        <a href="{{ settings[collection_link] }}" title="{{settings[brand_name] | strip_html }}" class="grid__image" alt="{{settings[brand_name] | strip_html }}">
+          {{  collection_image | asset_url | img_tag:settings[brand_name]    }}
+        </a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function(){
+    "use strict";
+    jQuery(document).ready(function($) {
+      $("#{% include 'shortcode-render' render:'id' default:'brand-slider' %}").owlCarousel({
+        // Most important owl features
+        items : {% include 'shortcode-render' render:'cols' default: settings.brand_items %},
+        itemsDesktop : [1199,{{settings.brand_itemsDesktop}}],
+        itemsTablet: [768,{{settings.brand_itemsTablet}}],
+        itemsMobile : [479,{{settings.brand_itemsMobile}}],
+        //Basic Speeds
+        slideSpeed : {{settings.brand_speed}},
+        paginationSpeed : {{settings.brand_speed}},
+        rewindSpeed : {{settings.brand_speed}},
+
+        //Autoplay
+        autoPlay : {{settings.brand_autoplay}},
+        stopOnHover : false,
+        // Navigation
+        navigation : {{settings.brand_navigation}},
+        navigationText : ["prev","next"],
+        rewindNav : true,
+        scrollPerPage : false,
+        //Pagination
+        pagination : {{settings.brand_pagination}},
+        paginationNumbers: false,
+
+        });
+    });
+  });
+</script>

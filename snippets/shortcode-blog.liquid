@@ -1,0 +1,79 @@
+{% capture handle_name %}{% include 'shortcode-render' render:'handle' default:settings.blog_home_choose %}{% endcapture %}
+ {% unless handle_name =="" %}
+ {% assign total_post = settings.blog_items %}
+ {% assign blog_home_items  = settings.blog_home_items %}
+	<section id="blog-home">
+	<div class="container">
+		<div class="blog-heading">
+			<h2>{% include 'shortcode-render' render:'title' default:settings.blog_home_title| strip_html %}</h2>
+		</div> 
+		<div class="blog-section"  id="{% include 'shortcode-render' render:'id' default:'blog-slider' %}">
+			{% for article in blogs[handle_name].articles limit: total_post %}
+				<div class="  wow bounceInLeft animated">
+					{% if article.image %}
+					<div class="blog-img"> <a><img src="{{ article.image.src | img_url: 'large' }}" alt="{{ article.title }}"></a>
+						
+					</div>
+					{% endif %}
+
+					<div class="post-info">
+
+						<div class="post-date">
+							<i class="icon-calendar"></i> 
+                          <span class="public-date"> {{ article.published_at |  date: "  %d  "  }}</span>
+							 <span class="public-month"> {{ article.published_at |  date: "  %b  "  }}</span>
+                      
+                          
+						</div>
+
+						<div class="title-excerpt">
+							<h2><a href="{{ article.url }}">{{ article.title }}</a> </h2>
+						      <div class="rte">
+						        {% if article.excerpt.size > 0 %}
+						          {{ article.excerpt }}
+						        {% else %}
+						          <p>{{ article.content | strip_html | truncatewords: 20 }}</p>
+						        {% endif %}
+						      </div>
+						<div class="mask"> <a class="info" href="{{ article.url }}">{{ 'blogs.article.read_more' | t }}</a> </div>
+						</div>
+					</div>
+					
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	</section>
+<script>
+(function($) {
+	$(document).ready(function() {
+	$("#{% include 'shortcode-render' render:'id' default:'blog-slider' %}").owlCarousel({
+ 
+    // Most important owl features
+    items :{% include 'shortcode-render' render:'cols' default: settings.blog_home_items %}  ,
+    itemsDesktop : [1199,{{settings.blog_home_itemsDesktop}}],
+    itemsTablet: [768,{{settings.blog_home_itemsTablet}}],
+    itemsMobile : [479,{{settings.blog_home_itemsMobile}}],
+  
+    //Basic Speeds
+    slideSpeed : {{settings.blog_home_speed}},
+    paginationSpeed : {{settings.blog_home_speed}},
+    rewindSpeed : {{settings.blog_home_speed}},
+ 
+    //Autoplay
+    autoPlay : {{settings.blog_home_autoplay}},
+    stopOnHover : false,
+    // Navigation
+    navigation : {{settings.blog_home_navigation}},
+    navigationText : ["prev","next"],
+    rewindNav : true,
+    scrollPerPage : false,
+    //Pagination
+    pagination : {{settings.blog_home_pagination}},
+    paginationNumbers: false,
+  
+		})
+	});
+})(jQuery);
+</script>
+ {% endunless %}

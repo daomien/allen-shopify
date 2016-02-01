@@ -1,0 +1,186 @@
+    {% comment %}
+        set variables for menu
+        List out your main-menu linklist (default)
+        More info on linklists:
+              - http://docs.shopify.com/themes/liquid-variables/linklists
+    {% endcomment %}
+    <!--  Check and get menu --> 
+    {% capture check_handle %}{{handle}}{% endcapture %}
+    {%if handle_parent_menu !="" %}
+      {% assign handle_parent_menu =  check_handle %}
+    {% elsif  settings.menu_nav_choose   %} 
+      {% assign handle_parent_menu = settings.menu_nav_choose %}
+    {% else %}
+      {% assign handle_parent_menu = 'main-menu' %}
+    {% endif %}
+    {% capture check_type %}{{type}}{% endcapture %}
+    {% assign menu_type = 'horizontal'  %}
+    {% if check_type contains 'horizontal'  or check_type contains 'vertical' %}
+        {% assign menu_type = check_type %}
+    {% endif %}
+    <!-- /End check and get menu -->
+    
+    <!--  Check and get number lever -->
+    {% if settings.menu_number_lever %}
+      {% assign menu_number_lever = settings.menu_number_lever | plus: 0 %}
+    {% else %}
+      {% assign menu_number_lever = 2 %}
+    {% endif %}
+    <!--  /End check -->
+  
+    <!--  Check and get sticky menu-->
+    {% if settings.menu_sticky  %}
+    {% assign  menu_sticky = true %}
+    {% else %}
+      {% assign  menu_sticky = false %}
+    {% endif %}
+
+    <!--/End check -->
+  {% if settings.menu_use_animation   %}
+      {% assign  menu_use_animation =true %}
+      {% assign menu_type_animation = settings.menu_type_animation %}
+      {% assign menu_animation= ' animated ' | append: settings.menu_type_animation  %}
+  {% else %}
+      {% assign menu_use_animation =false %}
+      {% assign menu_animation= ''  %}
+  {% endif %} 
+ <nav class="nav-bar {% if menu_sticky %} enable-fixed {% endif %} {{menu_type}} math-menu" role="navigation" id="menu-navigation-{{menu_type}}">
+      <div class="wrapper">
+          <!-- begin site-nav -->
+          {% if menu_type contains "vertical" %}
+            <h2>All Categories</h2>
+          {% endif %}
+          <ul class="site-nav" id="main-menu-{{menu_type}}" menu-page="{{template}}">
+           <!--- get menu user choose in custom theme -->
+            {% for link in linklists[handle_parent_menu].links %}
+              {% assign child_list_handle = link.title | handleize %}
+              {% if linklists[child_list_handle].links != blank and  menu_number_lever >=2 %}
+                <li class="has_dropdown {% if link.active %} active {% endif %} {%  cycle 'odd','even' %} {% if forloop.first %}first {% endif %}  {% if forloop.last %}  last {% endif%} menu-level-1" aria-haspopup="true">
+                  <a href="{{ link.url }}" class="menu-link">
+                      {% if link.title contains '['%}
+                      {% assign icon  = link.title |  split: '[' | last  | split: ']' | first %}
+                    <span><i class="fa {{ icon | strip_html }}"></i></span>
+                       {{ link.title |  split: '[' | first }}
+                    {%else %}
+                      {{ link.title }}
+                  {% endif %}
+                    
+                  </a>
+                  <span class="icon icon-arrow-down" aria-hidden="true"></span>
+                  <ul class="dropdown-menu {{menu_animation}}">
+                    {% for childlink in linklists[child_list_handle].links %}
+                      {% assign third_list_handle = childlink.title | handleize %}
+                        {% if linklists[third_list_handle] and linklists[third_list_handle].links.size >0  and  menu_number_lever >=3 %}
+                          <li class="{% if childlink.active %} active {% endif %} {%  cycle 'odd','even' %} {% if forloop.first %} first {% endif %}  {% if forloop.last %}  last {% endif%} has_child menu-level-2"  >
+                              <a href="{{ childlink.url }}" class="menu-link"> 
+                                     {% if childlink.title contains '['%}
+                                        {% assign icon  = childlink.title |  split: '[' | last  | split: ']' | first %}
+                                         <i class="fa {{ icon | strip_html }}"></i>
+                                         {{ childlink.title |  split: '[' | first }}
+                                      {%else %}
+                                        {{ childlink.title }}
+                                    {% endif %}
+                              </a>
+                              <span class="icon icon-arrow-right" aria-hidden="true"></span>
+                              <ul class="dropdown-third ">
+                                  {% for third_childlink  in linklists[third_list_handle].links %}
+                                  {% assign fourth_link_handle = third_childlink.title | handleize  %}
+                                    {% if linklists[fourth_link_handle]  and  linklists[fourth_link_handle].links.size > 0   and   menu_number_lever >=4 %}
+                                      <li class="{% if third_childlink.active %} active  {% endif %}  {%  cycle 'odd','even' %}  {% if forloop.first %} first {% endif %}  {% if forloop.last %}  last {% endif%}  has_third menu-level-3">
+                                        <a href="{{ third_childlink.url }}" class="menu-link">
+                                         {% if third_childlink.title  contains '['%}
+                                            {% assign icon  = third_childlink.title  |  split: '[' | last  | split: ']' | first %}
+                                             <i class="fa {{ icon | strip_html }}"></i>
+                                             {{ third_childlink.title  |  split: '[' | first }}
+                                          {%else %}
+                                            {{ third_childlink.title | escape  }}
+                                        {% endif %}
+                                          <span class="icon icon-arrow-right" aria-hidden="true"></span>
+                                          <ul class="dropdown-fourth ">
+                                            {% for fourth_childlink in linklists[fourth_link_handle].links %}
+                                                <li class="{% if fourth_childlink.active %} active {% endif %} {%  cycle 'odd','even' %} {% if forloop.first %} first {% endif %}  {% if forloop.last %}  last {% endif%}  has_end menu-level-4">
+                                                   <a href="{{ fourth_childlink.url }}" class="menu-link">{{ fourth_childlink.title | escape }}
+                                                     {% if fourth_childlink.title  contains '['%}
+                                                      {% assign icon  = fourth_childlink.title  |  split: '[' | last  | split: ']' | first %}
+                                                       <i class="fa {{ icon | strip_html }}"></i>
+                                                       {{ fourth_childlink.title |  split: '[' | first }}
+                                                    {%else %}
+                                                      {{ fourth_childlink.title | escape  }}
+                                                  {% endif %}
+                                                   </a>
+                                                </li>
+                                            {% endfor %}
+                                          </ul>
+                                      </li>
+                                    {% else %}
+                                      <li class="{% if third_childlink.active %} active  {% endif %}  {%  cycle 'odd','even' %} {% if forloop.first %} first {% endif %}  {% if forloop.last %}  last {% endif%}   nochild menu-level-3">
+                                        <a href="{{ third_childlink.url }}" class="menu-link"> {% if third_childlink.title  contains '['%}
+                                            {% assign icon  = third_childlink.title  |  split: '[' | last  | split: ']' | first %}
+                                               <i class="fa {{ icon | strip_html }}"></i>
+                                               {{ third_childlink.title  |  split: '[' | first }}
+                                            {%else %}
+                                              {{ third_childlink.title | escape  }}
+                                          {% endif %}</a>
+                                      </li>
+                                    {% endif %}
+                                  {% endfor %}
+                              </ul>
+                          </li>
+                        {% else %}
+                           <li class="{% if childlink.active %} site-nav--active{% endif %} {%  cycle 'odd','even' %} {% if forloop.first %} first {% endif %}  {% if forloop.last %}  last {% endif%}   nochild menu-level-2"  >
+                              <a href="{{ childlink.url }}" class="menu-link">
+                                   {% if childlink.title contains '['%}
+                                        {% assign icon  = childlink.title |  split: '[' | last  | split: ']' | first %}
+                                         <i class="fa {{ icon | strip_html }}"></i>
+                                         {{ childlink.title |  split: '[' | first }}
+                                      {%else %}
+                                        {{ childlink.title }}
+                                    {% endif %}
+                              </a>
+                          </li>
+                        {% endif %}
+                     
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% else %}
+                <li class="{% if link.active %}site-nav--active{% endif %} {% if forloop.first %} first {% endif %}  {% if forloop.last %}  last {% endif%}  nochild menu-level-1">
+                  <a href="{{ link.url }}" class="menu-link"> 
+                    {% if link.title contains '['%}
+                      {% assign icon  = link.title |  split: '[' | last  | split: ']' | first %}
+                       <i class="fa {{ icon | strip_html }}"></i>
+                       {{ link.title |  split: '[' | first }}
+                    {%else %}
+                      {{ link.title }}
+                  {% endif %}
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+          <!-- //site-nav -->
+        <div class="large--hide medium-down--show">
+          <div class="grid">
+            <div class="grid__item one-half">
+              <div class="site-nav--mobile">
+                <button type="button" class="icon-fallback-text menu-link js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
+                  <span class="icon icon-hamburger" aria-hidden="true"></span>
+                  <span class="fallback-text">{{ 'layout.navigation.menu' | t }}</span>
+                </button>
+              </div>
+            </div>
+            <div class="grid__item one-half text-right">
+              <div class="site-nav--mobile">
+                <a href="/cart" class="js-drawer-open-right menu-link" aria-controls="CartDrawer" aria-expanded="false">
+                  <span class="icon-fallback-text">
+                    <span class="icon icon-cart" aria-hidden="true"></span>
+                    <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+ 
